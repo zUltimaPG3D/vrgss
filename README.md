@@ -13,6 +13,11 @@ Module for V that lets you read and write to RPG Maker's RGSS archives.
 | RPG Maker MV       | No                      |
 | RPG Maker MZ       | No                      |
 
+# Installation
+```sh
+v install https://github.com/zUltimaPG3D/vrgss
+```
+
 # Usage
 ## Reading
 ```v
