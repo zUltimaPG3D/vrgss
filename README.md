@@ -9,7 +9,7 @@ Module for V that lets you read and write to RPG Maker's RGSS archives.
 | RPG Maker 2003     | Doesn't use archives(?) |
 | RPG Maker XP       | Yes                     |
 | RPG Maker VX       | Yes                     |
-| RPG Maker VX Ace   | No (planned)            |
+| RPG Maker VX Ace   | Yes                     |
 | RPG Maker MV       | No                      |
 | RPG Maker MZ       | No                      |
 
