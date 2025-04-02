@@ -47,18 +47,6 @@ pub fn (mut archive RGSS3A) valid() bool {
 	return true
 }
 
-// "Steps" the reader's current decryption key, by multiplying it by 7 and adding 3.
-fn (mut archive RGSS3A) step_key() {
-	archive.current_key = archive.current_key * 7 + 3
-}
-
-// Helper function to get the current key and step it.
-fn (mut archive RGSS3A) get_key() u32 {
-	key := archive.current_key
-	archive.step_key()
-	return key
-}
-
 // Decrypts the passed string and returns it.
 // <br>
 // This is different from `archive.decrypt_string` because it doesn't read the string from the file itself.
