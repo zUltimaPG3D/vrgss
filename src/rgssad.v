@@ -2,7 +2,6 @@ module vrgss
 
 import term
 import os
-import encoding.binary
 
 // Initializes the archive's reader.
 // <br>
