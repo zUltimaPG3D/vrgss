@@ -117,7 +117,7 @@ pub fn (mut archive RGSS2A) parse() bool {
 	archive.current_key = 0xDEADCAFE
 
 	if !archive.valid() {
-		eprintln("${term.white('[INFO]')} the archive isn't valid!")
+		eprintln("${term.red('[ERROR]')} the archive isn't valid!")
 		return false
 	}
 

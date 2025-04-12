@@ -115,7 +115,7 @@ pub fn (mut archive RGSS3A) read_entry(entry Entry) []u8 {
 // Returns `true` if the file was parsed to the end correctly, otherwise returns `false`.
 pub fn (mut archive RGSS3A) parse() bool {
 	if !archive.valid() {
-		eprintln("${term.white('[INFO]')} the archive isn't valid!")
+		eprintln("${term.red('[ERROR]')} the archive isn't valid!")
 		return false
 	}
 
