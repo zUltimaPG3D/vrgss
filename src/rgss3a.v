@@ -5,18 +5,6 @@ import os
 import encoding.binary
 import rand
 
-// Initializes the archive's reader.
-// <br>
-// Returns `true` if the reader was initialized correctly, otherwise returns `false`.
-pub fn (mut archive RGSS3A) initialize(path string) bool {
-	archive.reader = os.open(path) or {
-		eprintln("${term.red('[ERROR]')} couldn't open file! ${err}")
-		return false
-	}
-
-	return true
-}
-
 // Checks if the archive is a valid RGSS3A archive file.
 // <br>
 // You should check this before running `archive.parse()` if you want to handle invalid archives on your own.
@@ -84,30 +72,6 @@ fn (mut archive RGSS3A) decrypt_string(len int) string {
 	mut bytes := archive.reader.read_bytes_at(len, pos)
 
 	return archive.decrypt_string_internal(bytes.bytestr())
-}
-
-// Reads a file in the archive, using its position, length and the key it starts with.
-// <br>
-// Internally, all this does is call `decrypt_bytes` with data dynamically read from the file.
-// <br>
-// Returns a `[]u8` with all the decrypted bytes of the read file.
-fn (mut archive RGSS3A) read_data(pos u64, len u32, key u32) []u8 {
-	bytes := archive.reader.read_bytes_at(int(len), pos)
-
-	return decrypt_bytes(bytes, key)
-}
-
-// Reads the file associated with the passed entry.
-// <br>
-// Internally, all this does is call `archive.read_data` with the data from the entry.
-// <br>
-// Returns a `[]u8` with all the decrypted bytes of the read file.
-pub fn (mut archive RGSS3A) read_entry(entry Entry) []u8 {
-	pos := entry.offset
-	len := entry.size
-	key := entry.key
-
-	return archive.read_data(pos, len, key)
 }
 
 // Parses the RGSS3A archive file.
@@ -178,15 +142,6 @@ pub fn (mut archive RGSS3A) parse() bool {
 	}
 
 	return true
-}
-
-// Updates every read entry to set the `data` field on each one.
-// <br>
-// **This is a time-consuming operation and you shouldn't use this unless you're sure you want to, or if you need to set every entry's data for writing!**
-pub fn (mut archive RGSS3A) prepare() {
-	for mut entry in archive.entries {
-		entry.data = archive.read_entry(entry)
-	}
 }
 
 // Writes the current archive to the defined path.

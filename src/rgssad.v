@@ -3,18 +3,6 @@ module vrgss
 import term
 import os
 
-// Initializes the archive's reader.
-// <br>
-// Returns `true` if the reader was initialized correctly, otherwise returns `false`.
-pub fn (mut archive RGSS2A) initialize(path string) bool {
-	archive.reader = os.open(path) or {
-		eprintln("${term.red('[ERROR]')} couldn't open file! ${err}")
-		return false
-	}
-
-	return true
-}
-
 // Checks if the archive is a valid RGSSAD archive file.
 // <br>
 // You should check this before running `archive.parse()` if you want to handle invalid archives on your own.
@@ -86,30 +74,6 @@ fn (mut archive RGSS2A) decrypt_string(len int) string {
 	return archive.decrypt_string_internal(bytes.bytestr())
 }
 
-// Reads a file in the archive, using its position, length and the key it starts with.
-// <br>
-// Internally, all this does is call `decrypt_bytes` with data dynamically read from the file.
-// <br>
-// Returns a `[]u8` with all the decrypted bytes of the read file.
-fn (mut archive RGSS2A) read_data(pos u64, len u32, key u32) []u8 {
-	bytes := archive.reader.read_bytes_at(int(len), pos)
-
-	return decrypt_bytes(bytes, key)
-}
-
-// Reads the file associated with the passed entry.
-// <br>
-// Internally, all this does is call `archive.read_data` with the data from the entry.
-// <br>
-// Returns a `[]u8` with all the decrypted bytes of the read file.
-pub fn (mut archive RGSS2A) read_entry(entry Entry) []u8 {
-	pos := entry.offset
-	len := entry.size
-	key := entry.key
-
-	return archive.read_data(pos, len, key)
-}
-
 // Parses the RGSSAD archive file.
 // <br>
 // Returns `true` if the file was parsed to the end correctly, otherwise returns `false`.
@@ -167,15 +131,6 @@ pub fn (mut archive RGSS2A) parse() bool {
 	}
 
 	return true
-}
-
-// Updates every read entry to set the `data` field on each one.
-// <br>
-// **This is a time-consuming operation and you shouldn't use this unless you're sure you want to, or if you need to set every entry's data for writing!**
-pub fn (mut archive RGSS2A) prepare() {
-	for mut entry in archive.entries {
-		entry.data = archive.read_entry(entry)
-	}
 }
 
 // Writes an entry to the file.
