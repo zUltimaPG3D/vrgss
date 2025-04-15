@@ -4,6 +4,17 @@ import os
 import term
 import encoding.binary
 
+// binary.x_endian_get_u32 method helper
+pub fn get_u32(val u32) []u8 {
+	$if big_endian {
+		return binary.big_endian_get_u32(val)
+	} $else $if little_endian {
+		return binary.little_endian_get_u32(val)
+	} $else { // what?
+		return binary.little_endian_get_u32(val)
+	}
+}
+
 // Decrypts the passed bytes with the starting key and returns them.
 // <br>
 // Returns a `[]u8`.
@@ -12,13 +23,13 @@ fn decrypt_bytes(bytes []u8, key u32) []u8 {
 
 	mut temp_key := key
 	mut j := u8(0)
-	mut key_bytes := binary.little_endian_get_u32(temp_key)
+	mut key_bytes := get_u32(temp_key)
 
 	for i := u64(0); i < bytes.len; i++ {
 		if j == 4 {
 			j = 0
 			temp_key = temp_key * 7 + 3
-			key_bytes = binary.little_endian_get_u32(temp_key)
+			key_bytes = get_u32(temp_key)
 		}
 
 		temp_bytes[i] ^= key_bytes[j]

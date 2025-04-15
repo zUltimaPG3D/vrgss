@@ -45,7 +45,7 @@ fn (mut archive RGSS3A) decrypt_string_internal(str string) string {
 
 	mut temp_key := archive.current_key
 	mut j := u8(0)
-	mut key_bytes := binary.little_endian_get_u32(temp_key)
+	mut key_bytes := get_u32(temp_key)
 
 	for i := u64(0); i < temp_bytes.len; i++ {
 		if j == 4 {
